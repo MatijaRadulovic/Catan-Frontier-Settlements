@@ -9,7 +9,7 @@ bool BuildRoadMove::isValid(const GameSession& session) const {
     const Board& board = session.board();
     const Player& player = session.player(m_playerId);
 
-    if (session.currentPlayer() != m_playerId) // TODO game should be playable even without multiplayer, but in gui we will set buttons unclickable if currplayer != localplayer cus only he can make moves on his gui, other clients send him their moves
+    if (session.currentPlayer() != m_playerId)
         return false;
 
     if (!player.hasRoadLeft())
@@ -18,24 +18,22 @@ bool BuildRoadMove::isValid(const GameSession& session) const {
     if (!board.isEdgeFree(m_edgeId))
         return false;
 
-    // connected check, if phase is correct
+    // connected check, (depends on phase)
     bool connected = false;
-    if (session.phase() == TurnPhase::Main) {
-        if (!player.canAfford(Costs::Road))
+    if (session.phase() == TurnPhase::Main) {  // road needs to be connected to player's road or building
+        if (!player.hasResources(Costs::Road))
             return false;
 
-        connected =
-            board.edgeTouchesPlayerHouse(m_playerId, m_edgeId) ||
-            board.edgeTouchesPlayerRoad(m_playerId, m_edgeId);
+        connected = board.edgeTouchesPlayersRoad(m_playerId, m_edgeId);
+
     }
     else if (session.phase() == TurnPhase::InitialPlacement &&
         session.initialPlacementStep() == InitialPlacementStep::PlaceRoad){ // or both phases in separate check at start and this just in else
-        const auto& houses = player.getHouses();
-        if (houses.empty())
+        if (!player.hasHouses())
             return false;
 
-        Node* lastSettlement = houses.back(); // TODO or just function that remembers lastbuiltSettlement, if we do computeLongestRoad in board (update will be in session)
-        connected = board.edgeTouchesPlayerSettlement(lastSettlement->getOwner(), m_edgeId);
+        Node* lastSettlement = player.getLastHouseBuilt(); // TODO or just function that remembers lastbuiltSettlement, if we do computeLongestRoad in board (update will be in session)
+        connected = board.edgeTouchesNode(lastSettlement->getNodeId(), m_edgeId);  // road need to touch last placed house
     }
 
     if (!connected)
@@ -49,12 +47,10 @@ void BuildRoadMove::apply(GameSession& session) const {
     Player& player = session.player(m_playerId);
 
     if (session.phase() == TurnPhase::Main) {
-        player.spendResources(Costs::Road);
+        player.removeResources(Costs::Road);
     }
 
     Edge* edge= session.board().getEdgeById(m_edgeId);
     player.addRoad(edge); // adds to list of that players edges and decrements numofroads left
     board.placeRoad(m_playerId, m_edgeId);
-
-    session.updateLongestRoad(); // only then can longestroad be changed
 }

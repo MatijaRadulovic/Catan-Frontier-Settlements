@@ -10,7 +10,7 @@ bool BuildCityMove::isValid(const GameSession& session) const {
     const Board& board = session.board();
     const Player& player = session.player(m_playerId);
 
-    if (session.currentPlayer() != m_playerId) // TODO game should be playable even without multiplayer, but in gui we will set buttons unclickable if currplayer != localplayer cus only he can make moves on his gui, other clients send him their moves
+    if (session.currentPlayer() != m_playerId) // keep in mind this is not true for every move some are played by all players (accept trade, discard cards)
         return false;
 
     if (session.phase() != TurnPhase::Main) // only happens in main
@@ -19,10 +19,13 @@ bool BuildCityMove::isValid(const GameSession& session) const {
     if (!player.hasCityLeft())
         return false;
 
-    if (!player.canAfford(Costs::Settlement))
+    if (!player.hasResources(Costs::Settlement))
         return false;
 
-    if (!board.isSettlementOwnedBy(m_playerId, m_nodeId)) // is settlement + playerid is owner
+    if (!board.isNodeSettlement(m_nodeId))
+        return false;
+
+    if (!board.isBuildingOwnedBy(m_playerId, m_nodeId))
         return false;
 
     return true;
@@ -32,9 +35,9 @@ void BuildCityMove::apply(GameSession& session) const {
     Board& board = session.board();
     Player& player = session.player(m_playerId);
 
-    player.spendResources(Costs::City);
+    player.removeResources(Costs::City);
 
-    player.addVictoryPoints(1);
+    player.addPoints(1);
 
     board.placeCity(m_playerId, m_nodeId);
 }

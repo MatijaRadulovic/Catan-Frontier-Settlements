@@ -13,12 +13,12 @@
 void BoardView::computeSizes() {
     int minX,maxX,minY,maxY;
     for (auto c: m_board->getBoardCords()) {
-        HexCoords offsetCord=axialToOffset(c);
+        TileCoords offsetCord=axialToOffset(c);
 
-        minX=std::min(minX,offsetCord.first);
-        maxX=std::max(maxX,offsetCord.first);
-        minY=std::min(minY,offsetCord.second);
-        maxY=std::max(maxY,offsetCord.second);
+        minX=std::min(minX,offsetCord.q());
+        maxX=std::max(maxX,offsetCord.q());
+        minY=std::min(minY,offsetCord.r());
+        maxY=std::max(maxY,offsetCord.r());
     }
 
     int rows=maxY-minY+1;
@@ -37,13 +37,13 @@ void BoardView::processTileCords(Tile* tile, std::vector<ScreenCoords> &cords) {
         int i_next=(i+1)%static_cast<int>(PointDirection::End);
         PointDirection edgeDir=static_cast<PointDirection>(j);
 
-        Node* n=tile->getNodeAt(i_next);
-        Edge* e=tile->getEdgeAt(j);
-        NodeView nw(n,cords[i]);
-        EdgeView ew(e,cords[i],cords[i_next],edgeDir);
-
-        m_edges.push_back(std::move(ew));
-        m_nodes.push_back(std::move(nw));
+        // Node* n=tile->getNodeAt(i_next);
+        // Edge* e=tile->getEdgeAt(j);
+        // NodeView nw(n,cords[i]);
+        // EdgeView ew(e,cords[i],cords[i_next],edgeDir);
+        //
+        // m_edges.push_back(std::move(ew));
+        // m_nodes.push_back(std::move(nw));
     }
 }
 
@@ -53,8 +53,8 @@ void BoardView::init() {
     computeSizes();
 
     for (auto c: m_board->getBoardCords()) {
-        HexCoords offsetCord=axialToOffset(c);
-        ScreenCoords pos=offsetToScreen({offsetCord.first,offsetCord.second},m_center,m_gridSize);
+        TileCoords offsetCord=axialToOffset(c);
+        ScreenCoords pos=offsetToScreen({offsetCord.q(),offsetCord.r()},m_center,m_gridSize);
 
         TileView tw=TileView(m_board->getTileAt(c),pos,m_gridSize);
         m_tiles.push_back(std::move(tw));
@@ -65,10 +65,9 @@ void BoardView::init() {
     }
 }
 
-HexCoords BoardView::axialToOffset(HexCoords axial) {
-    auto [q,r]=axial;
-    int offsetX=q;
-    int offsetY=r+(q-q%2)/2;
+TileCoords BoardView::axialToOffset(TileCoords axial) {
+    int offsetX=axial.q();
+    int offsetY=axial.r()+(axial.q()-axial.q()%2)/2;
     return {offsetX,offsetY};
 }
 
@@ -79,10 +78,10 @@ ScreenCoords BoardView::stepSize(ScreenCoords tileSize) {
     return {stepX,stepY};
 }
 
-ScreenCoords BoardView::offsetToScreen(HexCoords offset,ScreenCoords origin ,ScreenCoords tileSize) {
+ScreenCoords BoardView::offsetToScreen(TileCoords offset,ScreenCoords origin ,ScreenCoords tileSize) {
     auto [stepX,stepY]=stepSize(tileSize);
-    int x=offset.first*stepX;
-    int y=offset.second*stepY+stepY/2*(offset.first%2);
+    int x=offset.q()*stepX;
+    int y=offset.r()*stepY+stepY/2*(offset.q()%2);
     return {origin.first+x,origin.second+y};
 }
 
