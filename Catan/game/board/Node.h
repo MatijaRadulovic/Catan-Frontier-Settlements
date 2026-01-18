@@ -32,6 +32,8 @@ public:
         m_tradeResource=portType;
     }
 
+    int getNodeId() const { return m_nodeId; }
+
     bool isEmpty() const { return m_type==NodeType::None; }
     bool isCity() const { return m_type==NodeType::City; }
     bool hasTrade() const { return m_hasTrade; }

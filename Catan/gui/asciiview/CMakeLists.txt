@@ -8,6 +8,8 @@ add_library(catan_ascii_view
         NodeView.cpp
         NodeView.hpp
         ViewTypes.hpp
+        controller/MoveParser.h
+        controller/MoveParser.cpp
 )
 
 target_include_directories(catan_ascii_view
