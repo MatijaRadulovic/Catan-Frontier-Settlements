@@ -50,6 +50,7 @@ RightOverlay::RightOverlay(std::vector<Player*>& players, Bank* bank, BoardToolb
 
     for (int i = 0; i < m_players.size(); ++i) {
         auto* p = new FloatingPanel(m_playersStack);
+        m_playerPanels.push_back(p);
         p->setFixedHeight(80);
 
         auto* pl = new QHBoxLayout(p);
@@ -231,6 +232,7 @@ void RightOverlay::paintEvent(QPaintEvent*) {
 }
 
 void RightOverlay::refreshAll() {
+    refreshTurnGlow();
     if (!m_bank) return;
 
     // --- refresh bank cards ---
@@ -377,6 +379,59 @@ void RightOverlay::setUpPopups(){
         tradeResponse->stackAndShow();
     });*/
 
+    auto* forceGlowShortcut = new QShortcut(QKeySequence(Qt::Key_P), this);
+    forceGlowShortcut->setContext(Qt::ApplicationShortcut);
+
+    connect(forceGlowShortcut, &QShortcut::activated, this, [this]() {
+        qDebug() << "P pressed";
+        forceGlowIndex(0);
+    });
+};
 
     //TODO fix this sh
+
+void RightOverlay::refreshTurnGlow()
+{
+    const int num = std::min<int>(m_players.size(), m_playerPanels.size());
+    int currentIdx = -1;
+
+    for (int i = 0; i < num; ++i) {
+        m_playerPanels[i]->setActiveHighlight(false);
+
+        if (currentIdx == -1 && m_players[i] && m_players[i]->isActive())
+            currentIdx = i;
+    }
+
+    if (currentIdx != -1)
+        m_playerPanels[currentIdx]->setActiveHighlight(true);
+}
+
+/*
+void RightOverlay::refreshTurnGlow()
+{
+    const int num = std::min<int>(m_players.size(), m_playerPanels.size());
+
+    for (int i = 0; i < num; ++i)
+        m_playerPanels[i]->setActiveHighlight(false);
+
+    if (m_currentPlayerId == types::InvalidPlayerId)
+        return;
+
+    for (int i = 0; i < num; ++i) {
+        if (m_players[i] && m_players[i]->getId() == m_currentPlayerId) {
+            m_playerPanels[i]->setActiveHighlight(true);
+            return;
+        }
+    }
+}*/
+
+void RightOverlay::forceGlowIndex(int forcedIdx)
+{
+    const int num = std::min<int>(m_players.size(), m_playerPanels.size());
+
+    for (int i = 0; i < num; ++i)
+        m_playerPanels[i]->setActiveHighlight(false);
+
+    if (forcedIdx >= 0 && forcedIdx < num)
+        m_playerPanels[forcedIdx]->setActiveHighlight(true);
 }
