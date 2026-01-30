@@ -5,7 +5,6 @@
 #include "ToolbarRenderState.h"
 
 void ToolbarRenderState::updateFromPhase(TurnPhase phase) {
-    m_phase = phase;
     m_enabledButtons.clear();
 
     switch (phase) {
@@ -20,20 +19,22 @@ void ToolbarRenderState::updateFromPhase(TurnPhase phase) {
             ToolbarButton::BuildCity,
             ToolbarButton::BuyDevCard,
             ToolbarButton::ActivateDevCard,
+            ToolbarButton::PlayerTrade,
+            ToolbarButton::BankTrade,
             ToolbarButton::EndTurn
         };
             break;
 
         case TurnPhase::InitialPlacement:
-            m_enabledButtons = {
+            /*m_enabledButtons = { TODO this is if we want our player to click the buttons himself
             ToolbarButton::BuildRoad,
             ToolbarButton::BuildSettlement
-        };
+        };*/
             break;
 
         case TurnPhase::RoadBuilding:
-            m_enabledButtons.insert(ToolbarButton::BuildRoad); // TODO maybe we want player to have that button automatically selected, to be decided
-            break;
+            /*m_enabledButtons.insert(ToolbarButton::BuildRoad); // TODO maybe we want player to have that button automatically selected, to be decided
+            break;*/
 
         case TurnPhase::YearOfPlenty:
         case TurnPhase::Monopoly:
@@ -46,6 +47,7 @@ void ToolbarRenderState::updateFromPhase(TurnPhase phase) {
             m_enabledPopups = {
             GamePopups::StealCard
         };
+        case TurnPhase::GameOver:
             break;
     }
 }

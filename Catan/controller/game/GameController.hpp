@@ -10,16 +10,17 @@
 
 #include "GameNetworkAdapter.h"
 #include "model/GameSession.h"
-#include "renderstate/RenderState.h"
-#include "move/Move.h"
 #include "renderstate/BoardRenderState.h"
 #include "renderstate/ToolbarRenderState.h"
+#include "move/Move.h"
 #include "screens/game/widget.h"
 
 class ClientController : public QObject {
     Q_OBJECT
 private:
     GameSession& m_session;
+    PlayerId m_localPlayerId = m_session.localPlayer();
+    bool isLocalPlayersTurn(const char* action) const;
     GameNetworkAdapter& m_adapter;
 
     BoardRenderState m_boardRenderState;
@@ -35,16 +36,30 @@ public:
 public slots:
     // TOOLBAR
     // BUILD:
-    void onBuildRoadClicked(PlayerId playerId);
-    void onBuildSettlementClicked(PlayerId playerId);
-    void onBuildCityClicked(PlayerId playerId);
+    void onBuildRoadClicked();
+    void onBuildSettlementClicked();
+    void onBuildCityClicked();
 
     // DEVCARDS:
+    void onBuyDevCardClicked();
+    void onUseDevCardClicked(DevCardType cardType);
+    void onStealCardPlayerChosen(PlayerId victimId);
+    void onMonopolyResourceChosen(ResourceType resource);
+    void onYearOfPlentyResourcesChosen(ResourceType resource1, ResourceType resource2);
+
+    // ROBBER:
+    void onDiscardCardsSent(const ResourcePack& discarded);
 
     // TRADE:
+    void onPlayerTradeRequestSent(const ResourcePack& give, const ResourcePack& receive);
+    void onPlayerTradeResponseSent(TradeId tradeRequestId);
+    void onPlayerTradeAcceptSent(TradeId tradeId, PlayerId acceptedPlayerId);
+
+    void onBankTradeSent(ResourceType give, ResourceType receive);
 
     // TURN:
-
+    void onRollDiceClicked();
+    void onEndTurnClicked();
 
     // BOARD
     void onBoardElementClicked(int elementId);
@@ -54,11 +69,11 @@ public slots:
 
     // GLOBAL
     void update();
+    void updateActiveToolOnPhase();
 
     signals:
         void onModelChanged(const BoardRenderState& state,
                             const ToolbarRenderState& toolbarState);
 };
-
 
 #endif //CATAN_GAMECONTROLLER_HPP

@@ -18,11 +18,14 @@ enum class ToolbarButton {
     BuyDevCard,
     ActivateDevCard,
 
+    PlayerTrade,
+    BankTrade,
+
     RollDice,
     EndTurn
 };
 
-enum class GamePopups {
+enum class GamePopups { // these are popups that arent triggered by click
     StealCard,
     DiscardCards
 };
