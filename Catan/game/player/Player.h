@@ -83,6 +83,7 @@ public:
 
     bool isActive() const {return m_isActive;}
     void setLeft() {m_isActive=false;}
+    void setActive(bool active) { m_isActive=active;}
 };
 
 

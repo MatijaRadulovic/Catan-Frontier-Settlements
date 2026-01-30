@@ -86,6 +86,10 @@ private:
     // player rows
     std::vector<PlayerUiRow> m_playerRows;
 
+    std::vector<FloatingPanel*> m_playerPanels;
+    void refreshTurnGlow();
+    void forceGlowIndex(int forcedIdx); // TODO will be removed when currplayer added
+
     BoardToolbar* m_toolbar;
 };
 #endif // RIGHTOVERLAY_H
