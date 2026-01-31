@@ -69,7 +69,7 @@ Widget::Widget(QWidget *parent, Board* b)
     shakeShortcut->setContext(Qt::ApplicationShortcut);
     connect(shakeShortcut, &QShortcut::activated, this, [qboard]() {
         qDebug() << "B pressed -> shake";
-        qboard->playBuildShake();
+        qboard->playBuildFeedback();
     });
 }
 void Widget::keyPressEvent(QKeyEvent* event)

@@ -1,5 +1,7 @@
 #include "TradeBankPopup.h"
 
+#include "common/AudioManager.h"
+
 TradeBankPopup::TradeBankPopup(Player* player, QWidget* parent)
     : FloatingPanel(parent)
 {
@@ -153,6 +155,8 @@ TradeBankPopup::TradeBankPopup(Player* player, QWidget* parent)
     layout->addWidget(m_sendButton);
 
     connect(m_sendButton, &QPushButton::clicked, this, [this]() {
+        AudioManager::instance().playClick();
+
         m_offer.give = selectedResources(m_giveCards);
         m_offer.receive = selectedResources(m_receiveCards);
         emit tradeSubmitted(m_offer);

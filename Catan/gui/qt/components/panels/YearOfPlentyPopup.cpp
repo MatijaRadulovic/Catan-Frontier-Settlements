@@ -14,6 +14,8 @@
 #include <components/cards/QCardRow.h>
 #include <components/cards/QCard.h>
 
+#include "common/AudioManager.h"
+
 // If you have a shared list already, use it instead:
 static const std::vector<ResourceType> kResourceCardTypes = {
     ResourceType::Wood,
@@ -64,6 +66,8 @@ YearOfPlentyPopup::YearOfPlentyPopup(Bank* bank, QWidget* parent)
     m_layout->addWidget(m_playBtn);
 
     connect(m_playBtn, &QPushButton::clicked, this, [this]() {
+        AudioManager::instance().playClick();
+
         // valid only when exactly 2 selected
         emit yearOfPlentySubmitted(m_choice);
         closePopup();

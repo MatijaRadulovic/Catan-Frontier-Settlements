@@ -9,6 +9,8 @@
 #include <components/cards/QCardRow.h>
 #include <components/cards/QCard.h>
 
+#include "common/AudioManager.h"
+
 MonopolyPopup::MonopolyPopup(QWidget* parent)
     : FloatingPanel(Qt::Dialog, parent)
 {
@@ -58,10 +60,12 @@ MonopolyPopup::MonopolyPopup(QWidget* parent)
     m_root->addLayout(btnRow);
 
     connect(m_cancelBtn, &QPushButton::clicked, this, [this]() {
+        AudioManager::instance().playClick();
         closePopup();
     });
 
     connect(m_confirmBtn, &QPushButton::clicked, this, [this]() {
+        AudioManager::instance().playClick();
         if (m_selected < 0 || m_selected >= m_choices.size()) return;
         emit resourceChosen(m_choices[m_selected]);
         closePopup();

@@ -1,7 +1,7 @@
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Charts)
-
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Multimedia)
 
 add_library(catan_gui_qt
         screens/game/widget.cpp
@@ -46,6 +46,8 @@ add_library(catan_gui_qt
         screens/mainmenu/MainMenu.cpp
         screens/mainmenu/MainMenu.h
         resources/resources.qrc
+        common/AudioManager.cpp
+        common/AudioManager.h
 )
 
 target_include_directories(catan_gui_qt
@@ -58,7 +60,7 @@ target_link_libraries(catan_gui_qt
         catan_game
         Qt${QT_VERSION_MAJOR}::Widgets
         Qt${QT_VERSION_MAJOR}::Charts
-
+        Qt${QT_VERSION_MAJOR}::Multimedia
 )
 
 set_target_properties(catan_gui_qt PROPERTIES

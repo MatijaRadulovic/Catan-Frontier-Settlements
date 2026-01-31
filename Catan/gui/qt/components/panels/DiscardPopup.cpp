@@ -14,6 +14,9 @@
 #include <components/cards/QCardRow.h>
 #include <components/cards/QCard.h>
 
+#include "common/AudioManager.h"
+#include "common/GameTheme.h"
+
 static const std::vector<ResourceType> kResourceCardTypes = {
     ResourceType::Wood,
     ResourceType::Brick,
@@ -62,6 +65,8 @@ DiscardPopup::DiscardPopup(Player* player, QWidget* parent)
     m_layout->addWidget(m_confirmBtn);
 
     connect(m_confirmBtn, &QPushButton::clicked, this, [this]() {
+        AudioManager::instance().playClick();
+
         // only allow when exactly reached
         if (totalSelected() != requiredDiscard()) return;
         emit discardConfirmed(m_choice);
@@ -159,7 +164,7 @@ void DiscardPopup::rebuild() {
         QCard* card = m_row->addCard(spec);
 
         // Left click = discard one (decrease remaining)
-        connect(card, &QCard::leftClicked, this, [this, rt]() {
+        connect(card, &QCard::leftClicked, this, [this, rt, card]() {
             const int need = requiredDiscard();
             if (need <= 0) return;
 
@@ -168,7 +173,14 @@ void DiscardPopup::rebuild() {
 
             const int have = m_holdings.count(rt) ? m_holdings.at(rt) : 0;
             const int disc = m_choice.discard[rt];
-            if (disc >= have) return; // can't discard more than you have
+            if (have <= 0) {
+                card->flicker(GameTheme::getFlickerColorByResource(rt));
+                return;
+            }
+            if (disc >= have) {
+                card->flicker(GameTheme::getFlickerColorByResource(rt));
+                return;
+            } // can't discard more than you have
 
             m_choice.discard[rt] = disc + 1;
             updateUiState();

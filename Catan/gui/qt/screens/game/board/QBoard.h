@@ -23,7 +23,7 @@ public:
     void setHighlightedEdges (const std::set<Edge*>& highlightedEdges);
     void setHighlightedNodes (const std::set<Node*>& highlightedNodes);
 
-    void playBuildShake();
+    void playBuildFeedback();
 
 protected:
     void paintEvent(QPaintEvent *event) override;

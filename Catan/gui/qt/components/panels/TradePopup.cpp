@@ -1,5 +1,7 @@
 #include "TradePopup.h"
 
+#include "common/AudioManager.h"
+
 TradePopup::TradePopup(Player* p,QWidget* parent)
     : FloatingPanel(Qt::Popup, parent)
 {
@@ -61,7 +63,6 @@ TradePopup::TradePopup(Player* p,QWidget* parent)
                 m_givesSelected--;
                 m_sendButton->setEnabled(m_givesSelected>0 and m_receivesSelected>0);
             }
-
             else{
                 helperCard->flicker(GameTheme::getFlickerColorByResource(resource));
             }
@@ -111,6 +112,8 @@ TradePopup::TradePopup(Player* p,QWidget* parent)
     layout->addWidget(m_sendButton);
 
     connect(m_sendButton, &QPushButton::clicked, this, [this]() {
+        AudioManager::instance().playClick();
+
         m_offer.give = selectedResources(m_giveCards);
         m_offer.receive = selectedResources(m_receiveCards);
         emit tradeSubmitted(m_offer);

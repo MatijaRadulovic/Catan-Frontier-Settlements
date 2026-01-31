@@ -1,6 +1,7 @@
 #include "BoardToolbar.h"
 
 #include "common/GameTheme.h"
+#include "common/AudioManager.h"
 #include "components/cards/CountBadge.h"
 #include"../../game/types/ResourceType.h"
 #include <model/MoveCosts.h>
@@ -177,8 +178,9 @@ QPushButton* BoardToolbar::createTradeButton(const QString& text,ToolbarActionTy
     )");
 
     connect(btn, &QPushButton::clicked, this, [this, action]() {
-        clearBuildSelection();
+        AudioManager::instance().playClick();
 
+        clearBuildSelection();
         if (action == ToolbarActionType::PlayerTrade) {
             showTradePopup();
         } else if (action == ToolbarActionType::BankTrade) {
@@ -213,6 +215,8 @@ QPushButton* BoardToolbar::createActionButton(const QString& text,ToolbarActionT
     }
 
     connect(btn, &QPushButton::clicked, this, [this, action, isBuildAction] {
+        AudioManager::instance().playClick();
+
         if (!isBuildAction) {
             clearBuildSelection();
         }

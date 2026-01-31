@@ -7,6 +7,8 @@
 #include <QPainter>
 #include <QPen>
 
+#include "common/AudioManager.h"
+
 RobPlayerPopup::RobPlayerPopup(QWidget* parent)
     : FloatingPanel(Qt::Dialog, parent)   // Popup closes when clicking outside
 {
@@ -75,6 +77,8 @@ void RobPlayerPopup::rebuild() {
         outer->addWidget(row);
 
         connect(btn, &QPushButton::clicked, this, [this, id=c->getPlayerId()]() {
+            AudioManager::instance().playClick();
+
             emit playerChosen(id);
             closePopup();
         });

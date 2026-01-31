@@ -1,5 +1,6 @@
 #include "DiceWidget.h"
 
+#include "common/AudioManager.h"
 #include <QPainter>
 #include <QMouseEvent>
 #include <QtMath>
@@ -57,8 +58,7 @@ void DiceWidget::paintEvent(QPaintEvent*)
     }
 }
 
-void DiceWidget::mousePressEvent(QMouseEvent* e)
-{
+void DiceWidget::mousePressEvent(QMouseEvent* e){
     if (e->button() != Qt::LeftButton) {
         QWidget::mousePressEvent(e);
         return;
@@ -70,6 +70,7 @@ void DiceWidget::mousePressEvent(QMouseEvent* e)
 
     // click anywhere on dice area triggers
     if (m_die1Rect.contains(pos) || m_die2Rect.contains(pos)) {
+        AudioManager::instance().playDiceRll();
         emit clicked();
 
         // which die

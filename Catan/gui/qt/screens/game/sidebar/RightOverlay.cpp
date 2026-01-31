@@ -22,6 +22,7 @@
 #include "components/panels/DiscardPopup.h"
 #include "components/panels/TradeOfferedPopup.h"
 #include "components/panels/YearOfPlentyPopup.h"
+#include <common/AudioManager.h>
 
 RightOverlay::RightOverlay(std::vector<Player*>& players, Bank* bank, BoardToolbar* toolbar, QWidget* parent)
     : m_bank(bank), m_toolbar(toolbar), QWidget(parent) {
@@ -128,7 +129,12 @@ void RightOverlay::buildChatUi(FloatingPanel* panel) {
 
     auto sendNow = [this]() {
         const QString text = m_chatInput->text().trimmed();
-        if (text.isEmpty()) return;
+        if (text.isEmpty()) {
+            AudioManager::instance().playError();
+            return;
+        }
+
+        AudioManager::instance().playClick();
         emit chatSendRequested(text);
         m_chatInput->clear();
     };

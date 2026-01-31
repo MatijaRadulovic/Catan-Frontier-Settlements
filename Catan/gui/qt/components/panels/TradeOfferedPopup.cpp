@@ -1,5 +1,6 @@
 #include "TradeOfferedPopup.h"
 
+#include "common/AudioManager.h"
 #include "player/Player.h"
 
 static constexpr int STACK_TOP_MARGIN  = 20;
@@ -96,12 +97,16 @@ TradeOfferedPopup::TradeOfferedPopup(Player* m_player, TradeOffer offer, QWidget
     layout->addLayout(buttons);
 
     connect(m_acceptButton, &QPushButton::clicked, this, [this]() {
+        AudioManager::instance().playClick();
+
         m_declineButton->setChecked(false);
         m_acceptButton->setChecked(true);
         emit tradeAccepted(m_offer);
     });
 
     connect(m_declineButton, &QPushButton::clicked, this, [this]() {
+        AudioManager::instance().playClick();
+
         m_declineButton->setChecked(true);
         m_acceptButton->setChecked(false);
 
