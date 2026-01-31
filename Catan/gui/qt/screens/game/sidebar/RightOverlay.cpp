@@ -378,14 +378,6 @@ void RightOverlay::setUpPopups(){
     [tradeResponse]() {
         tradeResponse->stackAndShow();
     });*/
-
-    auto* forceGlowShortcut = new QShortcut(QKeySequence(Qt::Key_P), this);
-    forceGlowShortcut->setContext(Qt::ApplicationShortcut);
-
-    connect(forceGlowShortcut, &QShortcut::activated, this, [this]() {
-        qDebug() << "P pressed";
-        forceGlowIndex(0);
-    });
 };
 
     //TODO fix this sh
@@ -397,7 +389,6 @@ void RightOverlay::refreshTurnGlow()
 
     for (int i = 0; i < num; ++i) {
         m_playerPanels[i]->setActiveHighlight(false);
-
         if (currentIdx == -1 && m_players[i] && m_players[i]->isActive())
             currentIdx = i;
     }
@@ -424,14 +415,3 @@ void RightOverlay::refreshTurnGlow()
         }
     }
 }*/
-
-void RightOverlay::forceGlowIndex(int forcedIdx)
-{
-    const int num = std::min<int>(m_players.size(), m_playerPanels.size());
-
-    for (int i = 0; i < num; ++i)
-        m_playerPanels[i]->setActiveHighlight(false);
-
-    if (forcedIdx >= 0 && forcedIdx < num)
-        m_playerPanels[forcedIdx]->setActiveHighlight(true);
-}
