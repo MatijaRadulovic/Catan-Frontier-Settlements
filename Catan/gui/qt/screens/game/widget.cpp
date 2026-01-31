@@ -2,6 +2,8 @@
 
 #include "widget.h"
 
+#include <QShortcut>
+
 #include "../../../../cmake-build-debug/gui/qt/catan_gui_qt_autogen/include/ui/ui_widget.h"
 
 #include "board/QBoard.h"
@@ -61,6 +63,13 @@ Widget::Widget(QWidget *parent, Board* b)
 
     connect(overlay, &RightOverlay::chatSendRequested, this, [overlay, players](const QString& text){
         overlay->addChatMessage(QString::fromStdString(players[players.size() - 1]->getName()), text);
+    });
+
+    auto* shakeShortcut = new QShortcut(QKeySequence(Qt::Key_B), this);
+    shakeShortcut->setContext(Qt::ApplicationShortcut);
+    connect(shakeShortcut, &QShortcut::activated, this, [qboard]() {
+        qDebug() << "B pressed -> shake";
+        qboard->playBuildShake();
     });
 }
 void Widget::keyPressEvent(QKeyEvent* event)

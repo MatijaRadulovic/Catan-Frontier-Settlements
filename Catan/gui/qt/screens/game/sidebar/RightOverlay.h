@@ -87,8 +87,7 @@ private:
     std::vector<PlayerUiRow> m_playerRows;
 
     std::vector<FloatingPanel*> m_playerPanels;
-    void refreshTurnGlow();
-    void forceGlowIndex(int forcedIdx); // TODO will be removed when currplayer added
+    void refreshTurnGlow(); // TODO change when currplayer added
 
     BoardToolbar* m_toolbar;
 };

@@ -32,7 +32,10 @@ private:
 public:
     ClientController(GameSession &session, GameNetworkAdapter &adapter, Widget &gameWindow, QObject *parent);
 
+    // GLOBAL
     void sendMove(const Move* move);
+    void update();
+    void updateActiveToolOnPhase();
 public slots:
     // TOOLBAR
     // BUILD:
@@ -62,18 +65,16 @@ public slots:
     void onEndTurnClicked();
 
     // BOARD
-    void onBoardElementClicked(int elementId);
+    void onBoardElementClicked(int elementId); // in gui sends signal and unhecks button
 
     // NETWORK
     void onMoveReceived(Move* move);
 
-    // GLOBAL
-    void update();
-    void updateActiveToolOnPhase();
-
     signals:
         void onModelChanged(const BoardRenderState& state,
                             const ToolbarRenderState& toolbarState);
+
+        void buildPlaced();
 };
 
 #endif //CATAN_GAMECONTROLLER_HPP

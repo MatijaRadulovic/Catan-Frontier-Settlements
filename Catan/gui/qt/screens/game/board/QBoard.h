@@ -23,6 +23,8 @@ public:
     void setHighlightedEdges (const std::set<Edge*>& highlightedEdges);
     void setHighlightedNodes (const std::set<Node*>& highlightedNodes);
 
+    void playBuildShake();
+
 protected:
     void paintEvent(QPaintEvent *event) override;
     void mouseMoveEvent(QMouseEvent* e) override;
@@ -42,6 +44,9 @@ private:
 
     QEdge* m_hoveredQEdge = nullptr;
     std::vector<QEdge> m_qedges;
+
+    double m_shakeX = 0.0;
+    double m_shakeY = 0.0;
 
     static QPointF axialToPixelTile(const TileCoords& a, double size);
 
