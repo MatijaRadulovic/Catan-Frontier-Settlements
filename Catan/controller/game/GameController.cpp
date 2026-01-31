@@ -91,7 +91,6 @@ void ClientController::updateActiveToolOnPhase(){
             break;
 
         default:
-            clearActiveTool();
             break;
     }
 }
@@ -249,6 +248,7 @@ void ClientController::sendMove(const Move* move) {
         return;
     }
 
+    clearActiveTool(); // tool isnt active anymore after sending move (even sequential moves are made of multiple moves)
     update();
     m_adapter.sendMove(move);
 }
