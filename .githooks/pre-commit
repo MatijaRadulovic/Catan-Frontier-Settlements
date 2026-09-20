@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# staged C++ sources, skipping vendored code in Catan/libs/
+FILES=$(git diff --cached --name-only --diff-filter=ACM \
+  | grep -E '^Catan/(appClient|appServer|controller|game|gui|network|tests)/.*\.(cpp|hpp|c|h)$')
+
+if [ -z "$FILES" ]; then
+  exit 0
+fi
+
+#file naming
+echo "Checking file naming conventions..."
+
+BAD_FILES=0
+for file in $FILES; do
+  filename=$(basename "$file")
+
+  # PascalCase only (main.cpp / testmain.cpp allowed as entry points)
+  if [[ ! "$filename" =~ ^([A-Z][A-Za-z0-9]*|main|testmain)\.(cpp|hpp|c|h)$ ]]; then
+    echo "   Invalid file name: $file"
+    echo "   Use PascalCase (example: BoardLayout.cpp)"
+    BAD_FILES=1
+  fi
+done
+
+if [ "$BAD_FILES" -ne 0 ]; then
+  echo "Commit blocked due to file naming violations."
+  exit 1
+fi
+
+#format
+BAD_FORMAT=0
+echo "Running clang-format..."
+for file in $FILES; do
+  if ! clang-format --dry-run --Werror "$file"; then
+    echo "   $file needs to be formatted!"
+    BAD_FORMAT=1
+  fi
+done
+
+if [ "$BAD_FORMAT" -ne 0 ]; then
+  echo "Commit blocked due to formatting violations. Run clang-format -i on the listed files."
+  exit 1
+fi
+
+exit 0
