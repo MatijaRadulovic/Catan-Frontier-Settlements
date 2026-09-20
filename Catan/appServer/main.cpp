@@ -2,10 +2,10 @@
 // Created by matija on 2/2/26.
 //
 
-#include <qcoreapplication.h>
 #include <ServerController.hpp>
+#include <qcoreapplication.h>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     QCoreApplication app(argc, argv);
 
     std::unique_ptr<ServerController> controller = std::make_unique<ServerController>();
