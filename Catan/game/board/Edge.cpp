@@ -5,13 +5,14 @@
 #include "Edge.h"
 
 bool Edge::hasTrade() const {
-    if (getStart()->hasTrade()&&getEnd()->hasTrade()) return true;
-    return false;
+    return getStart()->hasTrade() && getEnd()->hasTrade();
 }
 
 TradeType Edge::getTradeType() {
-    if (!hasTrade()) return TradeType::None;
-    for (auto n:getNodes()) {
+    if (!hasTrade()) {
+        return TradeType::None;
+    }
+    for (auto* n : getNodes()) {
         return n->getTradeResource();
     }
     return ResourceType::None;
