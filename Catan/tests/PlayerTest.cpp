@@ -14,7 +14,8 @@
 // deterministic board for tests
 static std::unique_ptr<Board> makeStandardBoard()
 {
-    return (new RandomStandardMapCreator)->getBoard();
+    RandomStandardMapCreator creator;
+    return creator.getBoard();
 }
 
 static NodeId pickAnyNodeId(Board const& b)
