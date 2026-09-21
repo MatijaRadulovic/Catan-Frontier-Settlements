@@ -84,3 +84,6 @@ CMakeLists.txt.user*
 # Conan
 CMakeUserPresets.json
 build-coverage/
+
+# Doxygen
+docs/

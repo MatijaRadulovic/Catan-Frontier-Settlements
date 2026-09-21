@@ -7,9 +7,16 @@
 
 #include "Rule.h"
 
-// rule in charge of keeping track, giving points and calculating who has largest army
+/**
+ * @ingroup rules
+ * @brief Pravilo zaduzeno za pracenje, dodelu poena i racunanje ko ima najvecu vojsku
+ */
 class LargestArmyRule : public Rule {
 public:
+    /**
+     * @brief Nalazi igraca sa najvise vitezova i po potrebi mu dodeljuje kartu
+     * @param session Sesija sa igracima i tekucim vlasnikom karte
+     */
     void evaluate(GameSession& session) override;
 };
 

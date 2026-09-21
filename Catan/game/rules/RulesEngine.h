@@ -11,14 +11,29 @@
 
 class GameSession;
 
-// class that holds all rules of the game and evaluates them when needed, this way we can make custom game logic and change rules to enable customization
+/**
+ * @ingroup rules
+ * @brief Drzi sva pravila igre i evaluira ih kada treba
+ *
+ * Ovako mozemo da pravimo custom game logic i menjamo pravila radi kastomizacije
+ */
 class RulesEngine {
 private:
-    std::vector<std::unique_ptr<Rule>> m_rules; // rules engine owns list of rules
+    std::vector<std::unique_ptr<Rule>> m_rules; ///< engine je vlasnik liste pravila
 public:
     RulesEngine();
 
-    void addRule(std::unique_ptr<Rule> rule); // maybe in future our client-host sends us rules of game he hosts and we add them
+    /**
+     * @brief Dodaje pravilo u listu
+     * @param rule Pravilo cije vlasnistvo preuzima engine
+     *
+     */
+    void addRule(std::unique_ptr<Rule> rule);
+
+    /**
+     * @brief Evaluira sva pravila redom kojim su dodata
+     * @param session Sesija nad kojom se pravila izvrsavaju
+     */
     void evaluate(GameSession& session) const;
 };
 

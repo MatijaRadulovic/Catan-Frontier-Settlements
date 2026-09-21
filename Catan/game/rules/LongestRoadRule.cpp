@@ -20,6 +20,7 @@ int LongestRoadRule::dfsLongest(const Edge* edge,PlayerId playerId,std::unordere
         if (visitedNodes.count(node->getNodeId())!=0)
             continue;
         visitedNodes.insert(node->getNodeId());
+        // tudje naselje na cvoru prekida put
         if (!node->isEmpty() && node->getOwner() != playerId)
             continue;
 
@@ -62,7 +63,7 @@ void LongestRoadRule::evaluate(GameSession &session) {
     for (const auto &p: players) {
         int longestRoad = computeLongestRoad(*p);
         p->setRoadLength(longestRoad);
-        if (longestRoad >= 5 && longestRoad > currentLongest) {
+        if (longestRoad >= 5 && longestRoad > currentLongest) { // 5 je prag za dobijanje karte, stari vlasnik se mora strogo prestici
             currentLongest = longestRoad;
             bestPlayer     = p->getPlayerId();
         }
