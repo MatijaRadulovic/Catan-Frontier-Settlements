@@ -1,0 +1,29 @@
+stages:
+  - test
+
+build-and-test:
+  stage: test
+  image: ubuntu:24.04
+  variables:
+    DEBIAN_FRONTEND: noninteractive
+  cache:
+    key: catch2-deps
+    paths:
+      - Catan/build/_deps
+  before_script:
+    - apt-get update
+    - apt-get install -y --no-install-recommends build-essential cmake ninja-build ca-certificates git
+  script:
+    - cd Catan
+    - |
+      cmake -S . -B build -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_CLIENT=OFF \
+        -DBUILD_SERVER=OFF \
+        -DBUILD_TESTS=ON
+    - cmake --build build 
+    - ctest --test-dir build --output-on-failure --output-junit test-results.xml
+  artifacts:
+    when: always
+    reports:
+      junit: Catan/build/test-results.xml
