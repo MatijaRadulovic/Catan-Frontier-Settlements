@@ -6,6 +6,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(-Wall -Wextra)
 
+option(ENABLE_COVERAGE "Build with gcov instrumentation for coverage reports" OFF)
+
+if(ENABLE_COVERAGE)
+    message(STATUS "Coverage instrumentation enabled")
+    add_compile_options(--coverage -O0 -g -fprofile-update=atomic)
+    add_link_options(--coverage)
+endif()
+
 option(OPT_CLANG_TIDY "Run tidy" OFF)
 
 if(OPT_CLANG_TIDY)
