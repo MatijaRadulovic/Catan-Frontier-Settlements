@@ -26,4 +26,4 @@ build-and-test:
   artifacts:
     when: always
     reports:
-      junit: Catan/build/test-results.xml
+      junit: Catan/build/test-results.xml  
